@@ -34,7 +34,7 @@ public class Ihale {
             if (content != null) {
                 allLinks(content);
             } else {
-                System.out.println("The link could not have crawled.");
+                System.out.println("The link could not crawl.");
                 System.out.println("Till now," + finalCount + " URLs couldn't crawl.");
                 break;
             }
