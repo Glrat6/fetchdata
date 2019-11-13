@@ -1,5 +1,8 @@
 package ihale;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,10 +14,15 @@ import org.jsoup.select.Elements;
 
 public class Ihale {
 
+    File file = null;
+    FileWriter fileWriter = null;
+    BufferedWriter bWriter = null;
     int finalCount = 0;
+    Response response = null;
     String domain = "https://ilan.gov.tr/";
 
     public static void main(String[] args) {
+        
         try {
             Ihale get = new Ihale();
             get.run();
@@ -24,7 +32,10 @@ public class Ihale {
     }
 
     public void run() throws IOException {
-
+        file = new File("file.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+        }
         Document content;
         int i = 0;
         while (true) {
@@ -33,7 +44,7 @@ public class Ihale {
             if (content != null) {
                 allLinks(content);
             } else {
-                System.out.println("The link could not crawl.");
+                System.out.println("The link could not have crawled.");
                 System.out.println("Till now," + finalCount + " URLs couldn't crawl.");
                 break;
             }
@@ -69,13 +80,32 @@ public class Ihale {
                             || insideItem.get(j).text().contains("İhale Türü")) {
                         System.out.println(insideItem.get(j).text());
                         System.out.println(lastPoints.get(j / 2).text());
+                        try {
+                            writeToTxt(insideItem.get(j).text());
+                            writeToTxt(lastPoints.get(j / 2).text());
+                        } catch (IOException ex) {
+                            Logger.getLogger(Ihale.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
-                System.out.println("\u001b[42m"+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println("\u001b[42m" + "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                try {
+                    writeToTxt("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                } catch (IOException ex) {
+                    Logger.getLogger(Ihale.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 finalCount++;
             }
         }
 
+    }
+
+    public void writeToTxt(String text) throws IOException {
+
+        fileWriter = new FileWriter(file,true);
+        bWriter = new BufferedWriter(fileWriter);
+        bWriter.write(text+"\n");
+        bWriter.close();
     }
 }
