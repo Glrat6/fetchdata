@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 public class Ihale {
 
     int finalCount = 0;
-    Response response = null;
     String domain = "https://ilan.gov.tr/";
 
     public static void main(String[] args) {
